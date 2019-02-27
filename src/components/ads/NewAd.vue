@@ -69,9 +69,9 @@
                         title: this.title,
                         description: this.description,
                         promo: this.promo,
-
+                        imageSrc: 'https://im0-tub-ru.yandex.net/i?id=5587a2f0aec4e813db3fe1d45ad1fce2-l&n=13'
                     }
-                    console.log(ad)
+                    this.$store.dispatch("createAd", ad)
                 }
             }
         }

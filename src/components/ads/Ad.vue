@@ -4,12 +4,12 @@
             <v-flex xs12>
                 <v-card>
                     <v-img
-                        src='https://im0-tub-ru.yandex.net/i?id=b227d3aa3b6c39938938c4bcb3ce18d6-l&n=13'
+                        :src='ad.imageSrc'
                         height="300px">
                     </v-img>
                     <v-card-text>
-                        <h1 class="text--primary">Asd</h1>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquid, asperiores, natus.</p>
+                        <h1 class="text--primary">{{ad.title}}</h1>
+                        <p>{{ad.description}}</p>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -23,8 +23,12 @@
 </template>
 <script>
     export default {
-        data() {
-            return {}
+        props:['id'],
+        computed:{
+            ad(){
+                const id= this.id
+                return this.$store.getters.adById(id)
+            }
         }
     }
 </script>
