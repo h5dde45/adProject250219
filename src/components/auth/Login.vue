@@ -69,6 +69,11 @@
                         })
                 }
             }
+        },
+        created() {
+            if (this.$route.query['loginError']) {
+                this.$store.dispatch('setError', 'This page is available to authorized users')
+            }
         }
     }
 </script>
