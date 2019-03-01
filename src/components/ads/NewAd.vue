@@ -18,16 +18,20 @@
                     <v-flex xs12>
                         <v-btn color="blue-grey"
                                class="white--text"
+                               @click="triggerUpload"
                         >
                             Upload
                             <v-icon right dark>cloud_upload</v-icon>
                         </v-btn>
+                        <input type="file" style="display: none"
+                               @change="onFileChange"
+                               accept="image/*" ref="fileInput">
                     </v-flex>
                 </v-layout>
                 <v-layout row>
                     <v-flex xs12>
-                        <img src=""
-                             width="400">
+                        <img :src="imageSrc"
+                             width="400" v-if="imageSrc">
                     </v-flex>
                 </v-layout>
                 <v-layout row>
@@ -43,7 +47,8 @@
                     <v-flex xs12>
                         <v-spacer></v-spacer>
                         <v-btn class="success"
-                               :disabled="!valid"
+                               :loading="loading"
+                               :disabled="!valid || !image || loading"
                                @click="createAd">Create ad
                         </v-btn>
                     </v-flex>
@@ -59,20 +64,44 @@
                 title: '',
                 description: '',
                 promo: false,
-                valid: false
+                valid: false,
+                image: null,
+                imageSrc: ''
+            }
+        },
+        computed: {
+            loading() {
+                return this.$store.getters.loading
             }
         },
         methods: {
             createAd() {
-                if (this.$refs.form.validate()) {
+                if (this.$refs.form.validate() && this.image) {
                     const ad = {
                         title: this.title,
                         description: this.description,
                         promo: this.promo,
-                        imageSrc: 'https://im0-tub-ru.yandex.net/i?id=5587a2f0aec4e813db3fe1d45ad1fce2-l&n=13'
+                        image: this.image
                     }
                     this.$store.dispatch("createAd", ad)
+                        .then(() => {
+                            this.$router.push('/list')
+                        })
+                        .catch(() => {
+                        })
                 }
+            },
+            triggerUpload() {
+                this.$refs.fileInput.click()
+            },
+            onFileChange(event) {
+                const file = event.target.files[0]
+                const reader = new FileReader()
+                reader.onload = e => {
+                    this.imageSrc = reader.result
+                }
+                reader.readAsDataURL(file)
+                this.image = file
             }
         }
     }
